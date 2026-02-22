@@ -59,10 +59,38 @@ input[type=color]::-webkit-color-swatch{border:none;border-radius:4px}
 .copied{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:8px 20px;border-radius:8px;font-size:13px;z-index:999;animation:fadeout 1.5s forwards}
 @keyframes fadeout{0%,70%{opacity:1}100%{opacity:0}}
 @media(max-width:768px){.app{grid-template-columns:1fr}.pl,.pr{max-height:none}.pl{border-right:none;border-bottom:1px solid var(--bd)}}
+/* Pro Feature */
+.pro-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;background:linear-gradient(135deg,#6c5ce7,#a29bfe);color:#fff;font-size:.65rem;font-weight:700;letter-spacing:.5px;margin-left:8px;vertical-align:middle}
+.pro-section{position:relative;cursor:pointer;margin:20px auto;max-width:800px;padding:0 16px}
+.pro-blur-content{filter:blur(5px);pointer-events:none;user-select:none;opacity:.5}
+.pro-overlay{position:absolute;top:0;left:16px;right:16px;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;background:rgba(10,10,15,.3);border-radius:var(--r);border:2px dashed rgba(108,92,231,.5);transition:all .3s}
+.pro-overlay:hover{background:rgba(108,92,231,.08);border-color:var(--ac)}
+.pro-lock-icon{font-size:2.5rem;margin-bottom:8px}
+.pro-label{font-size:1.1rem;font-weight:700;color:var(--ac2)}
+.pro-hint{font-size:.8rem;color:var(--tx2);margin-top:4px}
+.pro-mock-card{background:var(--sf);border-radius:var(--r);border:1px solid var(--bd);padding:16px;margin-bottom:8px}
+.pro-mock-card .pm-title{font-size:.85rem;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.pro-mock-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.pro-mock-item{background:var(--bg);border-radius:8px;padding:10px;text-align:center;font-size:.75rem;color:var(--tx2)}
+.pro-mock-item .pm-icon{font-size:1.4rem;margin-bottom:4px}
+.pro-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:300;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.pro-modal-overlay.show{display:flex}
+.pro-modal{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:32px;width:90%;max-width:420px;text-align:center;animation:proIn .3s ease}
+@keyframes proIn{from{opacity:0;transform:scale(.9) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.pro-modal h2{font-size:1.4rem;margin-bottom:4px;background:linear-gradient(135deg,var(--ac),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.pro-modal .pro-price{font-size:2.2rem;font-weight:800;color:var(--ac);margin:12px 0}
+.pro-modal .pro-price span{font-size:1rem;color:var(--tx2);font-weight:400}
+.pro-modal .pro-features{text-align:left;margin:20px 0;list-style:none;padding:0}
+.pro-modal .pro-features li{padding:10px 0;border-bottom:1px solid var(--bd);font-size:.9rem;display:flex;align-items:center;gap:10px}
+.pro-modal .pro-features li:last-child{border:none}
+.pro-upgrade-btn{display:inline-block;padding:14px 40px;background:linear-gradient(135deg,var(--ac),#8b5cf6);color:#fff;border:none;border-radius:12px;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all .2s;text-decoration:none;margin-top:8px}
+.pro-upgrade-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(108,92,231,.4)}
+.pro-modal .pro-close{margin-top:12px;background:none;border:none;color:var(--tx2);cursor:pointer;font-size:.9rem;padding:8px}
+.pro-modal .pro-close:hover{color:var(--tx)}
 </style>
 </head>
 <body>
-<div class="hd"><h1>&#127912; Box Shadow Generator</h1><p>可视化CSS阴影编辑器 · 多层叠加 · 20+精选预设</p></div>
+<div class="hd"><h1>&#127912; Box Shadow Generator <span class="pro-badge">✨ PRO</span></h1><p>可视化CSS阴影编辑器 · 多层叠加 · 20+精选预设</p></div>
 <div class="app">
 <div class="pl">
 <div class="sec"><div class="lh"><div class="st">&#128218; 预设样式</div></div><div class="pg" id="presetsGrid"></div></div>
@@ -85,6 +113,40 @@ input[type=color]::-webkit-color-swatch{border:none;border-radius:4px}
 </div>
 </div>
 <div class="ft">AI Box Shadow Generator &copy; 2025</div>
+<!-- Pro Section -->
+<div class="pro-section" onclick="showProModal()">
+  <div class="pro-overlay">
+    <div class="pro-lock-icon">🔒</div>
+    <div class="pro-label">Pro Shadow Tools</div>
+    <div class="pro-hint">Click to unlock advanced features</div>
+  </div>
+  <div class="pro-blur-content">
+    <div class="pro-mock-card">
+      <div class="pm-title">🔲 Multi-Layer Stacking</div>
+      <div class="pro-mock-grid">
+        <div class="pro-mock-item"><div class="pm-icon">📚</div>10+ Layers</div>
+        <div class="pro-mock-item"><div class="pm-icon">🎨</div>Per-Layer Color</div>
+        <div class="pro-mock-item"><div class="pm-icon">🔀</div>Layer Blend</div>
+      </div>
+    </div>
+    <div class="pro-mock-card">
+      <div class="pm-title">🎬 Animated Shadows</div>
+      <div class="pro-mock-grid">
+        <div class="pro-mock-item"><div class="pm-icon">▶️</div>Hover Effects</div>
+        <div class="pro-mock-item"><div class="pm-icon">🔄</div>Transitions</div>
+        <div class="pro-mock-item"><div class="pm-icon">🌊</div>Pulse Glow</div>
+      </div>
+    </div>
+    <div class="pro-mock-card">
+      <div class="pm-title">🌬️ Tailwind Export</div>
+      <div class="pro-mock-grid">
+        <div class="pro-mock-item"><div class="pm-icon">💨</div>Class Names</div>
+        <div class="pro-mock-item"><div class="pm-icon">⚙️</div>Config Plugin</div>
+        <div class="pro-mock-item"><div class="pm-icon">📋</div>Copy Ready</div>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
 const PRESETS = [
   {name:"浮起",layers:[{x:0,y:10,blur:30,spread:0,color:"#000000",opacity:0.3,inset:false}]},
@@ -270,5 +332,25 @@ renderControls();
 updatePreview();
 </script>
 <script async src="https://cdn.siteanalyze.io/monetize.js"></script>
+<script>
+function showProModal(){document.getElementById('proModalOverlay').classList.add('show')}
+function closeProModal(){document.getElementById('proModalOverlay').classList.remove('show')}
+</script>
+<div class="pro-modal-overlay" id="proModalOverlay" onclick="if(event.target===this)closeProModal()">
+  <div class="pro-modal">
+    <h2>🚀 Upgrade to Pro</h2>
+    <div class="pro-price">$9 <span>one-time payment</span></div>
+    <ul class="pro-features">
+      <li>✅ Multi-Layer Shadow Stacking (10+ layers)</li>
+      <li>✅ Animated Shadow Effects & Transitions</li>
+      <li>✅ Hover & Pulse Glow Animations</li>
+      <li>✅ Tailwind CSS Class Name Generation</li>
+      <li>✅ Tailwind Config Plugin Export</li>
+      <li>✅ Lifetime Access</li>
+    </ul>
+    <a href="https://feifeicch.gumroad.com/l/ai-box-shadow-pro" target="_blank" class="pro-upgrade-btn">Upgrade to Pro — $9</a>
+    <br><button class="pro-close" onclick="closeProModal()">Maybe later</button>
+  </div>
+</div>
 </body>
 </html>
