@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Box Shadow Generator</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f0f13;--sf:#1a1a24;--sf2:#22223a;--bd:#2a2a45;--tx:#e4e4ef;--tx2:#9999b3;--ac:#6c5ce7;--ac2:#a29bfe;--dg:#ff6b6b;--ok:#51cf66;--r:12px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;line-height:1.5}
+button{cursor:pointer;font-family:inherit;border:none;outline:none}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:var(--bd);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--ac);cursor:pointer;border:2px solid var(--ac2)}
+input[type=number]{width:64px;padding:3px 5px;background:var(--sf);border:1px solid var(--bd);border-radius:6px;color:var(--tx);font-size:12px;text-align:center}
+input[type=number]:focus{border-color:var(--ac)}
+input[type=color]{-webkit-appearance:none;width:32px;height:32px;border:2px solid var(--bd);border-radius:6px;background:none;cursor:pointer;padding:1px}
+input[type=color]::-webkit-color-swatch-wrapper{padding:0}
+input[type=color]::-webkit-color-swatch{border:none;border-radius:4px}
+.hd{text-align:center;padding:20px 16px 12px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-bottom:1px solid var(--bd)}
+.hd h1{font-size:clamp(1.2rem,3vw,1.7rem);background:linear-gradient(135deg,var(--ac2),#fd79a8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hd p{color:var(--tx2);font-size:12px}
+.app{display:grid;grid-template-columns:360px 1fr;min-height:calc(100vh - 90px)}
+.pl{padding:16px;overflow-y:auto;max-height:calc(100vh - 90px);border-right:1px solid var(--bd);background:var(--sf)}
+.pr{padding:16px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;max-height:calc(100vh - 90px)}
+.sec{margin-bottom:14px}
+.st{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--tx2);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.lh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.btn{padding:6px 12px;border-radius:7px;font-size:11px;font-weight:500;transition:all .2s}
+.bp{background:var(--ac);color:#fff}.bp:hover{background:var(--ac2)}
+.bs{padding:3px 8px;font-size:10px}
+.bdg{background:transparent;color:var(--dg);border:1px solid var(--dg)}.bdg:hover{background:var(--dg);color:#fff}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
+.tab{padding:4px 10px;border-radius:14px;font-size:11px;font-weight:500;background:var(--sf2);color:var(--tx2);border:1px solid transparent;transition:all .2s}
+.tab.on{background:var(--ac);color:#fff}.tab:hover:not(.on){border-color:var(--bd)}
+.cg{margin-bottom:10px}
+.cl{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:11px;color:var(--tx2)}
+.cr{display:flex;align-items:center;gap:8px}
+.cr input[type=range]{flex:1}
+.tr{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.tg{position:relative;width:38px;height:20px;background:var(--bd);border-radius:10px;cursor:pointer;transition:background .2s;flex-shrink:0}
+.tg.on{background:var(--ac)}
+.tg::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .2s}
+.tg.on::after{transform:translateX(18px)}
+.pv{flex:1;display:flex;align-items:center;justify-content:center;min-height:260px;background:repeating-conic-gradient(var(--sf2) 0% 25%,var(--sf) 0% 50%) 50%/20px 20px;border-radius:var(--r);border:1px solid var(--bd)}
+.box{width:160px;height:160px;background:var(--sf);border-radius:var(--r);transition:box-shadow .15s}
+.pvs{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pvs label{font-size:11px;color:var(--tx2);display:flex;align-items:center;gap:3px}
+.pvs input[type=color]{width:24px;height:24px}.pvs input[type=number]{width:50px}
+.ca{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden}
+.cah{display:flex;justify-content:space-between;align-items:center;padding:7px 12px;background:var(--sf2);border-bottom:1px solid var(--bd)}
+.cah span{font-size:11px;font-weight:600;color:var(--tx2)}
+.cab{padding:12px;font-family:'SF Mono',Monaco,Consolas,monospace;font-size:11px;line-height:1.7;color:var(--ac2);white-space:pre-wrap;word-break:break-all;max-height:120px;overflow-y:auto}
+.pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:5px}
+.pi{aspect-ratio:1;background:var(--sf);border:1px solid var(--bd);border-radius:7px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all .2s;gap:2px}
+.pi:hover{border-color:var(--ac);transform:translateY(-1px)}
+.pi .mb{width:28px;height:28px;background:var(--sf2);border-radius:4px}
+.pi .mn{font-size:8px;color:var(--tx2);text-align:center;line-height:1.1}
+.ft{text-align:center;padding:12px;color:var(--tx2);font-size:11px;border-top:1px solid var(--bd)}
+.copied{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:8px 20px;border-radius:8px;font-size:13px;z-index:999;animation:fadeout 1.5s forwards}
+@keyframes fadeout{0%,70%{opacity:1}100%{opacity:0}}
+@media(max-width:768px){.app{grid-template-columns:1fr}.pl,.pr{max-height:none}.pl{border-right:none;border-bottom:1px solid var(--bd)}}
+</style>
+</head>
+<body>
+<div class="hd"><h1>&#127912; Box Shadow Generator</h1><p>可视化CSS阴影编辑器 · 多层叠加 · 20+精选预设</p></div>
+<div class="app">
+<div class="pl">
+<div class="sec"><div class="lh"><div class="st">&#128218; 预设样式</div></div><div class="pg" id="presetsGrid"></div></div>
+<div class="sec">
+<div class="lh"><div class="st">&#128306; 阴影层</div><button class="btn bp bs" onclick="addLayer()">+ 添加</button></div>
+<div class="tabs" id="layerTabs"></div>
+<div id="layerControls"></div>
+</div>
+</div>
+<div class="pr">
+<div class="pvs">
+<label>盒子颜色 <input type="color" id="boxColor" value="#1a1a24" onchange="updateBoxStyle()"></label>
+<label>背景色 <input type="color" id="bgColor" value="#0f0f13" onchange="updateBoxStyle()"></label>
+<label>圆角 <input type="number" id="boxRadius" value="12" min="0" max="100" onchange="updateBoxStyle()"> px</label>
+<label>宽 <input type="number" id="boxW" value="160" min="40" max="400" onchange="updateBoxStyle()"> </label>
+<label>高 <input type="number" id="boxH" value="160" min="40" max="400" onchange="updateBoxStyle()"> </label>
+</div>
+<div class="pv" id="previewArea"><div class="box" id="previewBox"></div></div>
+<div class="ca"><div class="cah"><span>CSS 代码</span><button class="btn bp bs" onclick="copyCSS()">&#128203; 复制</button></div><pre class="cab" id="codeOutput"></pre></div>
+</div>
+</div>
+<div class="ft">AI Box Shadow Generator &copy; 2025</div>
+<script>
+const PRESETS = [
+  {name:"浮起",layers:[{x:0,y:10,blur:30,spread:0,color:"#000000",opacity:0.3,inset:false}]},
+  {name:"深浮",layers:[{x:0,y:20,blur:60,spread:-10,color:"#000000",opacity:0.5,inset:false}]},
+  {name:"柔和",layers:[{x:0,y:4,blur:15,spread:0,color:"#000000",opacity:0.15,inset:false}]},
+  {name:"硬阴影",layers:[{x:8,y:8,blur:0,spread:0,color:"#000000",opacity:0.4,inset:false}]},
+  {name:"凹陷",layers:[{x:0,y:2,blur:5,spread:0,color:"#000000",opacity:0.3,inset:true},{x:0,y:-2,blur:5,spread:0,color:"#ffffff",opacity:0.05,inset:true}]},
+  {name:"霓虹紫",layers:[{x:0,y:0,blur:20,spread:5,color:"#6c5ce7",opacity:0.8,inset:false},{x:0,y:0,blur:60,spread:10,color:"#6c5ce7",opacity:0.4,inset:false}]},
+  {name:"霓虹蓝",layers:[{x:0,y:0,blur:20,spread:5,color:"#0984e3",opacity:0.8,inset:false},{x:0,y:0,blur:60,spread:10,color:"#0984e3",opacity:0.4,inset:false}]},
+  {name:"霓虹粉",layers:[{x:0,y:0,blur:20,spread:5,color:"#fd79a8",opacity:0.8,inset:false},{x:0,y:0,blur:60,spread:10,color:"#fd79a8",opacity:0.4,inset:false}]},
+  {name:"霓虹绿",layers:[{x:0,y:0,blur:20,spread:5,color:"#00b894",opacity:0.8,inset:false},{x:0,y:0,blur:60,spread:10,color:"#00b894",opacity:0.4,inset:false}]},
+  {name:"立体3D",layers:[{x:1,y:1,blur:0,spread:0,color:"#555555",opacity:1,inset:false},{x:2,y:2,blur:0,spread:0,color:"#4a4a4a",opacity:1,inset:false},{x:3,y:3,blur:0,spread:0,color:"#3f3f3f",opacity:1,inset:false},{x:4,y:4,blur:0,spread:0,color:"#343434",opacity:1,inset:false},{x:5,y:5,blur:10,spread:0,color:"#000000",opacity:0.3,inset:false}]},
+  {name:"双侧",layers:[{x:-15,y:0,blur:25,spread:-5,color:"#000000",opacity:0.3,inset:false},{x:15,y:0,blur:25,spread:-5,color:"#000000",opacity:0.3,inset:false}]},
+  {name:"顶光",layers:[{x:0,y:-15,blur:30,spread:-5,color:"#6c5ce7",opacity:0.5,inset:false}]},
+  {name:"环绕",layers:[{x:0,y:0,blur:0,spread:3,color:"#6c5ce7",opacity:0.8,inset:false},{x:0,y:0,blur:15,spread:5,color:"#6c5ce7",opacity:0.3,inset:false}]},
+  {name:"纸片",layers:[{x:0,y:1,blur:3,spread:0,color:"#000000",opacity:0.12,inset:false},{x:0,y:1,blur:2,spread:0,color:"#000000",opacity:0.24,inset:false}]},
+  {name:"弥散",layers:[{x:0,y:30,blur:60,spread:-20,color:"#6c5ce7",opacity:0.6,inset:false}]},
+  {name:"内发光",layers:[{x:0,y:0,blur:30,spread:10,color:"#6c5ce7",opacity:0.5,inset:true}]},
+  {name:"浮雕",layers:[{x:-2,y:-2,blur:5,spread:0,color:"#ffffff",opacity:0.1,inset:true},{x:2,y:2,blur:5,spread:0,color:"#000000",opacity:0.3,inset:true}]},
+  {name:"长投影",layers:[{x:20,y:20,blur:0,spread:0,color:"#000000",opacity:0.1,inset:false},{x:40,y:40,blur:0,spread:0,color:"#000000",opacity:0.05,inset:false}]},
+  {name:"彩虹",layers:[{x:0,y:0,blur:15,spread:2,color:"#ff0000",opacity:0.4,inset:false},{x:0,y:0,blur:30,spread:5,color:"#ff8800",opacity:0.3,inset:false},{x:0,y:0,blur:45,spread:8,color:"#ffff00",opacity:0.2,inset:false},{x:0,y:0,blur:60,spread:12,color:"#00ff00",opacity:0.15,inset:false}]},
+  {name:"玻璃",layers:[{x:0,y:8,blur:32,spread:0,color:"#000000",opacity:0.2,inset:false},{x:0,y:0,blur:0,spread:1,color:"#ffffff",opacity:0.1,inset:true}]},
+  {name:"新拟态",layers:[{x:8,y:8,blur:16,spread:0,color:"#000000",opacity:0.4,inset:false},{x:-8,y:-8,blur:16,spread:0,color:"#ffffff",opacity:0.05,inset:false}]},
+  {name:"锐利",layers:[{x:6,y:6,blur:0,spread:0,color:"#6c5ce7",opacity:1,inset:false}]},
+  {name:"阶梯",layers:[{x:5,y:5,blur:0,spread:0,color:"#a29bfe",opacity:0.6,inset:false},{x:10,y:10,blur:0,spread:0,color:"#6c5ce7",opacity:0.4,inset:false},{x:15,y:15,blur:0,spread:0,color:"#4834d4",opacity:0.2,inset:false}]},
+  {name:"日落",layers:[{x:0,y:0,blur:40,spread:10,color:"#e17055",opacity:0.5,inset:false},{x:0,y:0,blur:80,spread:20,color:"#fdcb6e",opacity:0.3,inset:false}]}
+];
+
+let layers = [{x:4,y:4,blur:15,spread:0,color:"#000000",opacity:0.3,inset:false}];
+let activeLayer = 0;
+
+function hexToRgba(hex, a) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return "rgba("+r+","+g+","+b+","+a+")";
+}
+
+function generateShadow() {
+  return layers.map(l => {
+    const c = hexToRgba(l.color, l.opacity);
+    return (l.inset?"inset ":"")+l.x+"px "+l.y+"px "+l.blur+"px "+l.spread+"px "+c;
+  }).join(",\n       ");
+}
+
+function updatePreview() {
+  const box = document.getElementById("previewBox");
+  const shadow = layers.map(l => {
+    const c = hexToRgba(l.color, l.opacity);
+    return (l.inset?"inset ":"")+l.x+"px "+l.y+"px "+l.blur+"px "+l.spread+"px "+c;
+  }).join(", ");
+  box.style.boxShadow = shadow;
+  document.getElementById("codeOutput").textContent = "box-shadow: "+generateShadow()+";";
+}
+
+function updateBoxStyle() {
+  const box = document.getElementById("previewBox");
+  const area = document.getElementById("previewArea");
+  box.style.background = document.getElementById("boxColor").value;
+  area.style.background = document.getElementById("bgColor").value;
+  box.style.borderRadius = document.getElementById("boxRadius").value + "px";
+  box.style.width = document.getElementById("boxW").value + "px";
+  box.style.height = document.getElementById("boxH").value + "px";
+}
+
+function renderTabs() {
+  const c = document.getElementById("layerTabs");
+  c.innerHTML = layers.map((l,i) =>
+    '<button class="tab'+(i===activeLayer?' on':'')+'" onclick="selectLayer('+i+')">层 '+(i+1)+'</button>'
+  ).join('') + (layers.length > 1 ? ' <button class="btn bdg bs" onclick="removeLayer('+activeLayer+')">删除</button>' : '');
+}
+
+function selectLayer(i) {
+  activeLayer = i;
+  renderTabs();
+  renderControls();
+}
+
+function addLayer() {
+  layers.push({x:0,y:4,blur:10,spread:0,color:"#000000",opacity:0.25,inset:false});
+  activeLayer = layers.length - 1;
+  renderTabs();
+  renderControls();
+  updatePreview();
+}
+
+function removeLayer(i) {
+  if (layers.length <= 1) return;
+  layers.splice(i, 1);
+  if (activeLayer >= layers.length) activeLayer = layers.length - 1;
+  renderTabs();
+  renderControls();
+  updatePreview();
+}
+
+function moveLayer(from, to) {
+  if (to < 0 || to >= layers.length) return;
+  const tmp = layers[from];
+  layers[from] = layers[to];
+  layers[to] = tmp;
+  activeLayer = to;
+  renderTabs();
+  renderControls();
+  updatePreview();
+}
+
+function setVal(prop, val) {
+  if (prop === "opacity") layers[activeLayer][prop] = parseFloat(val);
+  else if (prop === "color") layers[activeLayer][prop] = val;
+  else if (prop === "inset") layers[activeLayer][prop] = !layers[activeLayer][prop];
+  else layers[activeLayer][prop] = parseInt(val);
+  updatePreview();
+  // sync range and number inputs
+  if (prop !== "color" && prop !== "inset") {
+    const r = document.getElementById("r_"+prop);
+    const n = document.getElementById("n_"+prop);
+    if (r) r.value = val;
+    if (n) n.value = val;
+  }
+}
+
+function makeControl(label, prop, min, max, step) {
+  const l = layers[activeLayer];
+  const v = prop === "opacity" ? l[prop] : l[prop];
+  return '<div class="cg"><div class="cl"><span>'+label+'</span><span id="v_'+prop+'">'+v+(prop==="opacity"?"":"px")+'</span></div>' +
+    '<div class="cr"><input type="range" id="r_'+prop+'" min="'+min+'" max="'+max+'" step="'+(step||1)+'" value="'+v+'" oninput="setVal(\''+prop+'\',this.value);document.getElementById(\'n_'+prop+'\').value=this.value;document.getElementById(\'v_'+prop+'\').textContent=this.value+\''+(prop==="opacity"?"":"px")+'\'"><input type="number" id="n_'+prop+'" min="'+min+'" max="'+max+'" step="'+(step||1)+'" value="'+v+'" onchange="setVal(\''+prop+'\',this.value);document.getElementById(\'r_'+prop+'\').value=this.value"></div></div>';
+}
+
+function renderControls() {
+  const l = layers[activeLayer];
+  const c = document.getElementById("layerControls");
+  let h = '';
+  h += '<div class="tr"><span style="font-size:11px;color:var(--tx2)">内阴影 (inset)</span><div class="tg'+(l.inset?" on":"")+'" onclick="setVal(\'inset\');renderControls()"></div>';
+  if (layers.length > 1) {
+    h += '<button class="btn bs" style="margin-left:auto;background:var(--sf2);color:var(--tx2)" onclick="moveLayer('+activeLayer+','+(activeLayer-1)+')">&#9650;</button>';
+    h += '<button class="btn bs" style="background:var(--sf2);color:var(--tx2)" onclick="moveLayer('+activeLayer+','+(activeLayer+1)+')">&#9660;</button>';
+  }
+  h += '</div>';
+  h += makeControl("X 偏移","x",-100,100);
+  h += makeControl("Y 偏移","y",-100,100);
+  h += makeControl("模糊半径","blur",0,200);
+  h += makeControl("扩展半径","spread",-50,50);
+  h += makeControl("透明度","opacity",0,1,0.01);
+  h += '<div class="cg"><div class="cl"><span>阴影颜色</span></div><div class="cr"><input type="color" value="'+l.color+'" onchange="setVal(\'color\',this.value)"><span style="font-size:11px;color:var(--tx2)">'+l.color+'</span></div></div>';
+  c.innerHTML = h;
+}
+
+function applyPreset(idx) {
+  const p = PRESETS[idx];
+  layers = JSON.parse(JSON.stringify(p.layers));
+  activeLayer = 0;
+  renderTabs();
+  renderControls();
+  updatePreview();
+}
+
+function renderPresets() {
+  const g = document.getElementById("presetsGrid");
+  g.innerHTML = PRESETS.map((p,i) => {
+    const shadow = p.layers.map(l => {
+      const c = hexToRgba(l.color, l.opacity);
+      return (l.inset?"inset ":"")+l.x+"px "+l.y+"px "+l.blur+"px "+l.spread+"px "+c;
+    }).join(", ");
+    return '<div class="pi" onclick="applyPreset('+i+')" title="'+p.name+'"><div class="mb" style="box-shadow:'+shadow+'"></div><div class="mn">'+p.name+'</div></div>';
+  }).join('');
+}
+
+function copyCSS() {
+  const text = "box-shadow: " + generateShadow() + ";";
+  navigator.clipboard.writeText(text).then(() => {
+    const d = document.createElement("div");
+    d.className = "copied";
+    d.textContent = "\u2705 已复制到剪贴板";
+    document.body.appendChild(d);
+    setTimeout(() => d.remove(), 1600);
+  });
+}
+
+// Init
+renderPresets();
+renderTabs();
+renderControls();
+updatePreview();
+</script>
+<script async src="https://cdn.siteanalyze.io/monetize.js"></script>
+</body>
+</html>
