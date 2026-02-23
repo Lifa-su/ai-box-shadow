@@ -148,6 +148,79 @@ navigator.clipboard.writeText(t).then(()=>{const b=document.querySelector('.cpbt
 }
 init();
 </script>
+<!-- Pro Features Section -->
+<style>
+.pro-section{max-width:1400px;margin:30px auto 0;padding:0 20px}
+.pro-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#e94560,#533483);padding:6px 16px;border-radius:20px;font-size:.85rem;font-weight:600;margin-bottom:16px;color:#fff}
+.pro-mock{position:relative;background:var(--sf,#16213e);border-radius:12px;border:1px solid rgba(255,255,255,.06);padding:30px;overflow:hidden;cursor:pointer;transition:transform .2s}
+.pro-mock:hover{transform:translateY(-2px)}
+.pro-mock-content{filter:blur(3px);opacity:.5;pointer-events:none}
+.pro-mock-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.pro-mock-card{background:rgba(255,255,255,.04);border-radius:10px;padding:20px;text-align:center}
+.pro-mock-card .pm-icon{font-size:1.8rem;margin-bottom:8px}
+.pro-mock-card h4{font-size:.9rem;color:#eee;margin-bottom:4px}
+.pro-mock-card p{font-size:.78rem;color:#888}
+.pro-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(26,26,46,.4);border-radius:12px;z-index:2}
+.pro-lock{font-size:2.5rem;margin-bottom:10px}
+.pro-ov-text{font-size:1.1rem;font-weight:600;color:#fff}
+.pro-ov-sub{font-size:.85rem;color:#aaa;margin-top:4px}
+.pro-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.pro-modal-bg.active{display:flex}
+.pro-modal{background:#16213e;border-radius:16px;padding:36px;max-width:440px;width:90%;text-align:center;border:1px solid rgba(233,69,96,.2);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.pro-modal h3{font-size:1.4rem;margin-bottom:6px;color:#fff}
+.pro-modal .pro-price{font-size:2rem;font-weight:700;color:#e94560;margin:12px 0}
+.pro-modal .pro-price span{font-size:.9rem;color:#aaa;font-weight:400}
+.pro-modal ul{list-style:none;text-align:left;margin:20px 0;padding:0}
+.pro-modal ul li{padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.9rem;color:#ccc;display:flex;align-items:center;gap:8px}
+.pro-modal ul li::before{content:'✓';color:#e94560;font-weight:700;flex-shrink:0}
+.pro-modal .btn-upgrade{display:block;width:100%;padding:14px;background:linear-gradient(135deg,#e94560,#533483);color:#fff;border:none;border-radius:10px;font-size:1.05rem;font-weight:600;cursor:pointer;transition:opacity .2s;text-decoration:none;text-align:center}
+.pro-modal .btn-upgrade:hover{opacity:.9}
+.pro-modal .btn-later{display:block;width:100%;padding:10px;background:transparent;color:#888;border:none;cursor:pointer;font-size:.9rem;margin-top:8px;transition:color .2s}
+.pro-modal .btn-later:hover{color:#eee}
+@media(max-width:768px){.pro-mock-grid{grid-template-columns:1fr}}
+</style>
+<div class="pro-section">
+<div class="pro-badge">⚡ PRO Features</div>
+<div class="pro-mock" id="proMock">
+<div class="pro-overlay">
+<div class="pro-lock">🔒</div>
+<div class="pro-ov-text">Unlock Pro Features</div>
+<div class="pro-ov-sub">Click to see what's included</div>
+</div>
+<div class="pro-mock-content">
+<div class="pro-mock-grid">
+<div class="pro-mock-card"><div class="pm-icon">🎬</div><h4>Animated Shadows</h4><p>Keyframe animations with hover, pulse, and glow effects</p></div>
+<div class="pro-mock-card"><div class="pm-icon">📦</div><h4>Batch Generate</h4><p>Generate 50+ shadow variations in one click</p></div>
+<div class="pro-mock-card"><div class="pm-icon">🎨</div><h4>Figma Export</h4><p>Export shadows directly to Figma-compatible format</p></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pro-modal-bg" id="proModalBg">
+<div class="pro-modal">
+<h3>Upgrade to Pro</h3>
+<div class="pro-price">$9 <span>one-time</span></div>
+<ul>
+<li>Animated shadow effects (hover, pulse, glow, float)</li>
+<li>Batch generate 50+ shadow variations</li>
+<li>Export to Figma-compatible format</li>
+<li>CSS animation keyframes included</li>
+<li>Priority support & future updates</li>
+</ul>
+<a class="btn-upgrade" href="https://feifeicch.gumroad.com/l/ai-box-shadow-pro" target="_blank">Upgrade to Pro — $9</a>
+<button class="btn-later" id="proLater">Maybe later</button>
+</div>
+</div>
+<script>
+(function(){
+var mock=document.getElementById('proMock');
+var bg=document.getElementById('proModalBg');
+var later=document.getElementById('proLater');
+mock.addEventListener('click',function(){bg.classList.add('active');});
+later.addEventListener('click',function(){bg.classList.remove('active');});
+bg.addEventListener('click',function(e){if(e.target===bg)bg.classList.remove('active');});
+})();
+</script>
 <script src="https://alwingulla.com/88/tag.min.js" data-zone="130747" async data-cfasync="false"></script>
 </body>
 </html>
